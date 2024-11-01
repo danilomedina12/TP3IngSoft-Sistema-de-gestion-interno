@@ -8,7 +8,7 @@ class Vehiculo(db.Model):
     nombre_cliente = db.Column(db.String(100), nullable=False)
     hora_ingreso = db.Column(db.DateTime, nullable=False)
     hora_egreso = db.Column(db.DateTime, nullable=True)
-    ubicacion_cochera = db.Column(db.String(50), nullable=True)  # Asegúrate de que esté presente
+    ubicacion_cochera = db.Column(db.String(50), nullable=True) 
 
     def __init__(self, patente, nombre_cliente, hora_ingreso, ubicacion_cochera=None):
         self.patente = patente
