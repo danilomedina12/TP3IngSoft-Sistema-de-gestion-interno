@@ -1,0 +1,24 @@
+<form method="post" action="/register">
+    <!-- Campos de patente y nombre del cliente -->
+    <label for="patente">Patente:</label>
+    <input type="text" id="patente" name="patente" required><br>
+
+    <label for="nombre_del_cliente">Nombre del Cliente:</label>
+    <input type="text" id="nombre_del_cliente" name="nombre_del_cliente" required><br>
+
+    <!-- Nueva sección para asignar cochera -->
+    <label for="ubicacion_cochera">Ubicación de Cochera:</label>
+    <select id="ubicacion_cochera" name="ubicacion_cochera" required>
+        <option value="">Seleccionar cochera</option>
+        <!-- Lista de cocheras por piso -->
+        {% for planta, cocheras in cocheras_disponibles.items() %}
+            <optgroup label="{{ piso }}">
+                {% for cochera in cocheras %}
+                    <option value="{{ cochera }}">{{ cochera }}</option>
+                {% endfor %}
+            </optgroup>
+        {% endfor %}
+    </select><br>
+
+    <input type="submit" value="Registrar">
+</form>
