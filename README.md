@@ -12,9 +12,12 @@
 1. Cloná el repositorio a tu dispositivo (como prefieras)
     
 
-2. Creá y activá el entorno virtual
+2. Creá y activá el entorno virtual:
+
     python -m venv venv
+
     source venv/bin/activate  # En Linux/Mac
+    
     venv\Scripts\activate     # En Windows
 
 3. Instalá las dependencias:
