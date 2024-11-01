@@ -9,7 +9,7 @@
 
 ## Instalación
 
-1. Cloná el repositorio a tu dispositivo (como prefieras)
+1. Cloná el repositorio: Podés clonar este proyecto desde GitHub utilizando el método que prefieras (HTTPS, SSH, GitHub CLI, etc.).
     
 
 2. Creá y activá el entorno virtual:
@@ -26,20 +26,29 @@
 
 4. Configurá la base de datos:
 
+    Creá la base de datos estacionamiento en tu servidor local de MariaDB/MySQL:
+
     CREATE DATABASE estacionamiento;
 
-5. Ejecutá el proyecto:
+5. Configurá la conexión a la base de datos en app.py:
+
+    Abrí app.py y actualizá la URI de la base de datos:
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuario:contraseña@localhost/estacionamiento'
+
+Reemplazá usuario y contraseña con tus credenciales de MariaDB/MySQL.
+
+6. Inicializá las tablas:
+    
+    Ejecutá el proyecto para que SQLAlchemy cree las tablas en la base de datos:
 
     python app.py
 
 
 ## USO
 
-1. Configurá la conexión a la base de datos en app.py:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://usuario:contraseña@localhost/estacionamiento'
+1. Ejecutá la aplicación (asegurate de tener el entorno virtual activado):
 
-2. Ejecutá la aplicación (con el entorno virtual activado):
     python app.py
 
-Accedé a la aplicación en http://127.0.0.1:5000/
-
+2. Accedé a la aplicación en tu navegador en http://127.0.0.1:5000/.
