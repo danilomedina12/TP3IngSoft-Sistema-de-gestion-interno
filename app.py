@@ -5,7 +5,7 @@ from controllers.parking_controller import *
 app = Flask(__name__)
 app.secret_key = 'mi_clave_secreta' 
 # configuracion de la base de datos 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://dbuser:1234@localhost/estacionamiento'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://danilo:falilv@localhost/estacionamiento'
 db.init_app(app)
 
 #crear tablas en la base de datos si no existen
