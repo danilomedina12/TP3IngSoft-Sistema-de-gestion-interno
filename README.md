@@ -52,3 +52,7 @@ Reemplazá usuario y contraseña con tus credenciales de MariaDB/MySQL.
     python app.py
 
 2. Accedé a la aplicación en tu navegador en http://127.0.0.1:5000/.
+
+## Mostrar vehiculos
+
+Esta el endpoint http://127.0.0.1:5000/vehiculos donde se ven los vehiculos registrados.
