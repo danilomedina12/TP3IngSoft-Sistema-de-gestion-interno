@@ -43,7 +43,7 @@ def registrarVehiculo():
         'Primer Piso': [f'P1-{i+1}' for i in range(18)],
         'Segundo Piso': [f'P2-{i+1}' for i in range(18)]
     }
-    return render_template('register_vehicle.html', cocheras_disponibles=cocheras_disponibles)
+    return render_template('register_vehiculo.html', cocheras_disponibles=cocheras_disponibles)
 
 @app.route('/vehiculos', methods=['GET'])
 def verVehiculos():
