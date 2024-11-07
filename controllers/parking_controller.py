@@ -6,6 +6,33 @@ from models.vehiculo import Vehiculo
 from datetime import datetime
 from app import app
 
+
+@app.route('/registerEgreso', methods=['GET', 'POST'])
+def registrarEgreso():
+    if request.method == 'POST':
+        patente = request.form['patente']
+        nombre = request.form['nombre_del_cliente']
+        hora_egreso = datetime.now()
+
+        if not patente or not nombre:
+            flash("Patente y nombre del cliente son obligatorios.", "error")
+    try:
+            nuevoEgreso_vehiculo = Vehiculo(
+                patente=patente, 
+                nombre_cliente=nombre, 
+                hora_egreso=hora_egreso, 
+            )
+            db.session.add(nuevoEgreso_vehiculo)
+            db.session.commit()
+            flash("Vehículo egresado correctamente.")
+    except Exception as e:
+            db.session.rollback()  # Revertir cambios en caso de error
+            flash(f"Ocurrió un error al egresar el vehículo: {str(e)}", "error")
+
+    
+    return render_template('registerEgreso.html')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def registrarVehiculo():
     if request.method == 'POST':
@@ -52,3 +79,18 @@ def verVehiculos():
 
     # Renderizar la plantilla y pasar la lista de vehículos
     return render_template('ver_vehiculos.html', vehiculos=vehiculos)
+
+
+# Tarifa por hora
+COSTO_POR_HORA = 10 
+
+def calcular_costo_estacionamiento(hora_ingreso, hora_egreso):
+    # Calcula la duración en horas
+    duracion = (hora_egreso - hora_ingreso).total_seconds() / 3600
+    costo = duracion * COSTO_POR_HORA
+    return round(costo, 2)
+
+def tiempo_total_estadia(hora_ingreso, hora_salida):
+    # Calcula la duración en horas
+    duracion = (hora_salida - hora_ingreso).total_seconds() / 3600
+    return duracion

@@ -21,6 +21,10 @@ def index():
 def register():
     return registrarVehiculo()
 
+@app.route('/registerEgreso', methods=['GET', 'POST'])
+def registerEgreso():
+    return registrarEgreso()
+
 @app.route('/vehiculos', methods=['GET'])
 def vehiculos():
     return verVehiculos()

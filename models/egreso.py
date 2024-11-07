@@ -3,11 +3,16 @@
 # Tarifa por hora
 COSTO_POR_HORA = 10 
 
-def calcular_costo_estacionamiento(hora_ingreso, hora_salida):
+def costo_estacionamiento(hora_ingreso, hora_salida):
     # Calcula la duración en horas
     duracion = (hora_salida - hora_ingreso).total_seconds() / 3600
     costo = duracion * COSTO_POR_HORA
     return round(costo, 2)
+
+def tiempo_total_estadia(hora_ingreso, hora_salida):
+    # Calcula la duración en horas
+    duracion = (hora_salida - hora_ingreso).total_seconds() / 3600
+    return duracion
 
 def registrar_egreso(patente):
     try:
