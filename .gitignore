@@ -5,7 +5,9 @@ mi_entorno_virtual/
 # Ignorar archivos de caché de Python
 __pycache__/
 *.py
-
+*.pyo
+*.pyd
+*.pyc
 # Ignorar archivos de configuración de entornos locales
 .env
 
