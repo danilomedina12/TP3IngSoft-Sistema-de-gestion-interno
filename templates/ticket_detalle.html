@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket de Estacionamiento</title>
+</head>
+<body>
+    <h1>Ticket de Estacionamiento</h1>
+    <p><strong>Patente:</strong> {{ ticket.vehiculo.patente }}</p>
+    <p><strong>Cliente:</strong> {{ ticket.vehiculo.nombre_cliente }}</p>
+    <p><strong>Ubicación de Cochera:</strong> {{ ticket.vehiculo.ubicacion_cochera }}</p>
+    <p><strong>Hora de Emisión:</strong> {{ ticket.hora_emision }}</p>
+    <p><strong>Monto Total:</strong> {{ ticket.monto_total }} ARS</p>
+    <p><strong>Detalles:</strong> {{ ticket.detalles }}</p>
+</body>
+</html>
