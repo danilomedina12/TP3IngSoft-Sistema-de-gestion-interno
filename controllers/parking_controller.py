@@ -3,33 +3,69 @@
 from flask import request, redirect, url_for, flash, render_template
 from database import db
 from models.vehiculo import Vehiculo
+from models.ticket import Ticket
 from datetime import datetime
 from app import app
 
+def obtener_vehiculo_por_patente(patente):
+    """
+    Busca un vehículo en la base de datos dado su patente.
+    Retorna el objeto Vehiculo si existe, de lo contrario, None.
+    """
+    return Vehiculo.query.filter_by(patente=patente).first()
+
+
+# Tarifa por hora
+COSTO_POR_HORA = 10 
+
+def calcular_costo_estacionamiento(hora_ingreso, hora_egreso):
+    # Calcula la duración en horas
+    duracion = (hora_egreso - hora_ingreso).total_seconds() / 3600
+    costo = duracion * COSTO_POR_HORA
+    return round(costo, 2)
 
 @app.route('/registerEgreso', methods=['GET', 'POST'])
 def registrarEgreso():
     if request.method == 'POST':
         patente = request.form['patente']
-        nombre = request.form['nombre_del_cliente']
         hora_egreso = datetime.now()
 
-        if not patente or not nombre:
-            flash("Patente y nombre del cliente son obligatorios.", "error")
-    try:
-            nuevoEgreso_vehiculo = Vehiculo(
-                patente=patente, 
-                nombre_cliente=nombre, 
-                hora_egreso=hora_egreso, 
-            )
-            db.session.add(nuevoEgreso_vehiculo)
-            db.session.commit()
-            flash("Vehículo egresado correctamente.")
-    except Exception as e:
-            db.session.rollback()  # Revertir cambios en caso de error
-            flash(f"Ocurrió un error al egresar el vehículo: {str(e)}", "error")
+        # Verifica que el campo 'patente' no esté vacío
+        if not patente:
+            flash("Patente es obligatorio.", "error")
+            return render_template('registerEgreso.html')
 
-    
+        # Llama a la función para obtener el vehículo por patente
+        vehiculo = obtener_vehiculo_por_patente(patente)
+
+        if vehiculo:
+            # Cambia el valor del atributo `hora_egreso` por la variable `hora_egreso`
+            vehiculo.hora_egreso = hora_egreso
+            db.session.commit()  # Guarda los cambios en la base de datos
+
+            # Crear y guardar el ticket en la base de datos
+            detalle = f"Patente: {vehiculo.patente}, Cliente: {vehiculo.nombre_cliente}, Ubicación: {vehiculo.ubicacion_cochera}"
+            ticket = Ticket(
+                vehiculo_id=vehiculo.id,
+                hora_emision=hora_egreso,
+                monto_total=calcular_costo_estacionamiento(vehiculo.hora_ingreso, vehiculo.hora_egreso),
+                detalles=detalle
+            )
+
+            try:
+                db.session.add(ticket)
+                db.session.commit()
+                flash("Salida registrada y ticket generado correctamente.", "success")
+            except Exception as e:
+                db.session.rollback()
+                flash(f"Error al registrar la salida: {str(e)}", "error")
+                return render_template('registerEgreso.html')
+            
+            # Renderizar el ticket generado en un HTML
+            return render_template('ticket_detalle.html', ticket=ticket)
+        else:
+            flash("Vehículo no encontrado en la base de datos.", "error")
+
     return render_template('registerEgreso.html')
 
 
@@ -81,16 +117,8 @@ def verVehiculos():
     return render_template('ver_vehiculos.html', vehiculos=vehiculos)
 
 
-# Tarifa por hora
-COSTO_POR_HORA = 10 
 
-def calcular_costo_estacionamiento(hora_ingreso, hora_egreso):
+def tiempo_total_estadia(hora_ingreso, hora_egreso):
     # Calcula la duración en horas
     duracion = (hora_egreso - hora_ingreso).total_seconds() / 3600
-    costo = duracion * COSTO_POR_HORA
-    return round(costo, 2)
-
-def tiempo_total_estadia(hora_ingreso, hora_salida):
-    # Calcula la duración en horas
-    duracion = (hora_salida - hora_ingreso).total_seconds() / 3600
     return duracion

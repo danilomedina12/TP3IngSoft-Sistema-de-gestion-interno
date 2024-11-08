@@ -26,6 +26,7 @@
                     <th>Patente</th>
                     <th>Nombre del Cliente</th>
                     <th>Hora de Ingreso</th>
+                    <th>Hora de Egreso</th>
                     <th>Ubicación de Cochera</th>
                 </tr>
             </thead>
@@ -35,11 +36,18 @@
                         <td>{{ vehiculo.patente }}</td>
                         <td>{{ vehiculo.nombre_cliente }}</td>
                         <td>{{ vehiculo.hora_ingreso.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>
+                            {% if vehiculo.hora_egreso %}
+                                {{ vehiculo.hora_egreso.strftime('%Y-%m-%d %H:%M:%S') }}
+                            {% else %}
+                                No registrado
+                            {% endif %}
+                        </td>
                         <td>{{ vehiculo.ubicacion_cochera }}</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="4" class="text-center">No hay vehículos registrados.</td>
+                        <td colspan="5" class="text-center">No hay vehículos registrados.</td>
                     </tr>
                 {% endfor %}
             </tbody>
