@@ -9,7 +9,9 @@
     <p><strong>Patente:</strong> {{ ticket.vehiculo.patente }}</p>
     <p><strong>Cliente:</strong> {{ ticket.vehiculo.nombre_cliente }}</p>
     <p><strong>Ubicación de Cochera:</strong> {{ ticket.vehiculo.ubicacion_cochera }}</p>
+    <p><strong>Hora de Ingreso:</strong> {{ ticket.hora_entrada }}</p>
     <p><strong>Hora de Emisión:</strong> {{ ticket.hora_emision }}</p>
+    <p><strong>Tiempo de estadia (horas):</strong> {{ "%.1f"|format(ticket.tiempo) }} </p>
     <p><strong>Monto Total:</strong> {{ ticket.monto_total }} ARS</p>
     <p><strong>Detalles:</strong> {{ ticket.detalles }}</p>
 </body>

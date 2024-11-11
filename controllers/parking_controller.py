@@ -18,9 +18,14 @@ def obtener_vehiculo_por_patente(patente):
 # Tarifa por hora
 COSTO_POR_HORA = 10 
 
-def calcular_costo_estacionamiento(hora_ingreso, hora_egreso):
+def tiempo_total_estadia(hora_ingreso, hora_egreso):
     # Calcula la duración en horas
     duracion = (hora_egreso - hora_ingreso).total_seconds() / 3600
+    return duracion
+
+def calcular_costo_estacionamiento(hora_ingreso, hora_egreso):
+    # Calcula la duración en horas
+    duracion = tiempo_total_estadia(hora_ingreso, hora_egreso)
     costo = duracion * COSTO_POR_HORA
     return round(costo, 2)
 
@@ -44,14 +49,14 @@ def registrarEgreso():
             db.session.commit()  # Guarda los cambios en la base de datos
 
             # Crear y guardar el ticket en la base de datos
-            detalle = f"Patente: {vehiculo.patente}, Cliente: {vehiculo.nombre_cliente}, Ubicación: {vehiculo.ubicacion_cochera}"
             ticket = Ticket(
                 vehiculo_id=vehiculo.id,
                 hora_emision=hora_egreso,
-                monto_total=calcular_costo_estacionamiento(vehiculo.hora_ingreso, vehiculo.hora_egreso),
-                detalles=detalle
+                hora_entrada=vehiculo.hora_ingreso,
+                tiempo=tiempo_total_estadia(vehiculo.hora_ingreso, vehiculo.hora_egreso),
+                monto_total=calcular_costo_estacionamiento(vehiculo.hora_ingreso, vehiculo.hora_egreso)
             )
-
+            
             try:
                 db.session.add(ticket)
                 db.session.commit()
@@ -115,10 +120,3 @@ def verVehiculos():
 
     # Renderizar la plantilla y pasar la lista de vehículos
     return render_template('ver_vehiculos.html', vehiculos=vehiculos)
-
-
-
-def tiempo_total_estadia(hora_ingreso, hora_egreso):
-    # Calcula la duración en horas
-    duracion = (hora_egreso - hora_ingreso).total_seconds() / 3600
-    return duracion
