@@ -2,6 +2,14 @@
     <!-- Campos de patente y nombre del cliente -->
     <label for="patente">Patente:</label>
     <input type="text" id="patente" name="patente" required><br>
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="alert {{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <input type="submit" value="Confirmar Egreso">
 </form>
