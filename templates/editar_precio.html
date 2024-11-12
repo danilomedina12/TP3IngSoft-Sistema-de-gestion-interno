@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Precio</title>
+</head>
+<body>
+    <h1>Editar Precio de Hora de Estadia por Vehículo</h1>
+    
+    <form method="POST">
+        <label for="tipo_vehiculo">Tipo de Vehículo:</label>
+        <select name="tipo_vehiculo" id="tipo_vehiculo" required>
+            {% for tipo in tipos_vehiculos %}
+                <option value="{{ tipo }}">{{ tipo }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="nuevo_precio">Nuevo Precio:</label>
+        <input type="text" name="nuevo_precio" id="nuevo_precio" required><br><br>
+
+        <button type="submit">Actualizar Precio</button>
+    </form>
+
+</body>
+</html>

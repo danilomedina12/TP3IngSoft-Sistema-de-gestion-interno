@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Precios</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Lista de Precios</h1>
+            <a href="{{ url_for('editarPrecios') }}" class="btn btn-primary">Añadir/Editar Nuevo Precio</a>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tipo de Vehículo</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for precio in precios %}
+                <tr>
+                    <td>{{ precio.tipo_vehiculo }}</td>
+                    <td>{{ precio.precio }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

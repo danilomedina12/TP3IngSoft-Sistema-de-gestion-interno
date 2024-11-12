@@ -4,8 +4,8 @@ from flask import request, redirect, url_for, flash, render_template
 from database import db
 from models.vehiculo import Vehiculo
 from models.ticket import Ticket
+from models.precio_estadia import Precio
 from datetime import datetime
-from app import app
 
 def obtener_vehiculo_por_patente(patente):
     """
@@ -14,22 +14,29 @@ def obtener_vehiculo_por_patente(patente):
     """
     return Vehiculo.query.filter_by(patente=patente).first()
 
-
-# Tarifa por hora
-COSTO_POR_HORA = 10 
-
 def tiempo_total_estadia(hora_ingreso, hora_egreso):
     # Calcula la duración en horas
     duracion = (hora_egreso - hora_ingreso).total_seconds() / 3600
     return duracion
 
-def calcular_costo_estacionamiento(hora_ingreso, hora_egreso):
+def tiempo_total_estadia_minutos(hora_ingreso, hora_egreso):
+    # Calcula la duración en horas
+    duracion = (hora_egreso - hora_ingreso).total_seconds() / 60
+    return duracion
+
+def calcular_costo_estacionamiento(hora_ingreso, hora_egreso, vehiculo):
+    # Obtener el precio
+    precio = Precio.query.filter(Precio.tipo_vehiculo == vehiculo.tipo_vehiculo).first()
+    
     # Calcula la duración en horas
     duracion = tiempo_total_estadia(hora_ingreso, hora_egreso)
-    costo = duracion * COSTO_POR_HORA
+    
+    # Calcular el valor del servicio
+    costo = duracion * precio.precio
+    
     return round(costo, 2)
 
-@app.route('/registerEgreso', methods=['GET', 'POST'])
+# @app.route('/registerEgreso', methods=['GET', 'POST'])
 def registrarEgreso():
     if request.method == 'POST':
         patente = request.form['patente']
@@ -54,7 +61,7 @@ def registrarEgreso():
                 hora_emision=hora_egreso,
                 hora_entrada=vehiculo.hora_ingreso,
                 tiempo=tiempo_total_estadia(vehiculo.hora_ingreso, vehiculo.hora_egreso),
-                monto_total=calcular_costo_estacionamiento(vehiculo.hora_ingreso, vehiculo.hora_egreso)
+                monto_total=calcular_costo_estacionamiento(vehiculo.hora_ingreso, vehiculo.hora_egreso, vehiculo)
             )
             
             try:
@@ -67,6 +74,7 @@ def registrarEgreso():
                 return render_template('registerEgreso.html')
             
             # Renderizar el ticket generado en un HTML
+            ticket.tiempo=tiempo_total_estadia(vehiculo.hora_ingreso, vehiculo.hora_egreso)
             return render_template('ticket_detalle.html', ticket=ticket)
         else:
             flash("Vehículo no encontrado en la base de datos.", "error")
@@ -74,13 +82,14 @@ def registrarEgreso():
     return render_template('registerEgreso.html')
 
 
-@app.route('/register', methods=['GET', 'POST'])
+#@app.route('/register', methods=['GET', 'POST'])
 def registrarVehiculo():
     if request.method == 'POST':
         patente = request.form['patente']
         nombre = request.form['nombre_del_cliente']
         hora_ingreso = datetime.now()
         ubicacion_cochera = request.form['ubicacion_cochera']
+        tipo_vehiculo = request.form['tipo_vehiculo']
 
         if not patente or not nombre:
             flash("Patente y nombre del cliente son obligatorios.", "error")
@@ -93,7 +102,8 @@ def registrarVehiculo():
             nuevo_vehiculo = Vehiculo(
                 patente=patente, 
                 nombre_cliente=nombre, 
-                hora_ingreso=hora_ingreso, 
+                hora_ingreso=hora_ingreso,
+                tipo_vehiculo=tipo_vehiculo, 
                 ubicacion_cochera=ubicacion_cochera
             )
             db.session.add(nuevo_vehiculo)
@@ -111,12 +121,49 @@ def registrarVehiculo():
         'Primer Piso': [f'P1-{i+1}' for i in range(18)],
         'Segundo Piso': [f'P2-{i+1}' for i in range(18)]
     }
-    return render_template('register_vehiculo.html', cocheras_disponibles=cocheras_disponibles)
+    tipos_vehiculos = Precio.tipos_vehiculos()
+    return render_template('register_vehiculo.html', cocheras_disponibles=cocheras_disponibles,tipos_vehiculos=tipos_vehiculos)
 
-@app.route('/vehiculos', methods=['GET'])
+#@app.route('/vehiculos', methods=['GET'])
 def verVehiculos():
     # Consultar todos los vehículos registrados
     vehiculos = Vehiculo.query.all()  # Obtiene todos los registros de la tabla vehiculos
 
     # Renderizar la plantilla y pasar la lista de vehículos
     return render_template('ver_vehiculos.html', vehiculos=vehiculos)
+
+#@app.route('/precios', methods=['GET'])
+def verPrecio():
+    # Consulto todos los precios que existen
+    precios = Precio.query.all()
+    
+    return render_template('precios.html', precios=precios)  # Cambiado a `precios`
+
+
+#@app.route('/editar_precio', methods=['GET', 'POST'])
+def editar_precio():
+    tipos_vehiculos = Precio.tipos_vehiculos()
+
+    if request.method == 'POST':
+        tipo_vehiculo = request.form['tipo_vehiculo']
+        nuevo_precio = float(request.form['nuevo_precio'])
+
+        # Buscar el precio actual del tipo de vehículo
+        precio = Precio.query.filter_by(tipo_vehiculo=tipo_vehiculo).first()
+
+        if precio:
+            # Si ya existe, actualiza el precio
+            precio.precio = nuevo_precio
+            flash("Precio actualizado correctamente.")
+        else:
+            # Si no existe, crea un nuevo registro
+            precio = Precio(tipo_vehiculo=tipo_vehiculo, precio=nuevo_precio)
+            db.session.add(precio)
+            flash("Precio registrado correctamente.")
+
+        db.session.commit()
+
+        # Redirige después de actualizar o crear el precio
+        return redirect(url_for('verPrecios'))
+
+    return render_template('editar_precio.html', tipos_vehiculos=tipos_vehiculos)
