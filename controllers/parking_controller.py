@@ -5,6 +5,7 @@ from database import db
 from models.vehiculo import Vehiculo
 from models.ticket import Ticket
 from models.precio_estadia import Precio
+from models.horario import Horario
 from datetime import datetime
 
 def obtener_vehiculo_por_patente(patente):
@@ -84,6 +85,17 @@ def registrarEgreso():
 
 #@app.route('/register', methods=['GET', 'POST'])
 def registrarVehiculo():
+    # Obtener la hora actual
+    hora_actual = datetime.now().time()
+
+    # Verificar si la hora está fuera del horario permitido
+    if hora_actual < Horario.hora_apertura or hora_actual >= Horario.hora_cierre:
+        flash("Registro de ingreso permitido solo entre las {} y {}.".format(
+            Horario.hora_apertura.strftime("%H:%M"), 
+            Horario.hora_cierre.strftime("%H:%M")
+        ), "warning")
+        return redirect(url_for('index'))  # Redirige al inicio o a una página adecuada
+
     if request.method == 'POST':
         patente = request.form['patente']
         nombre = request.form['nombre_del_cliente']
