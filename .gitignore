@@ -16,3 +16,6 @@ __pycache__/
 
 # Ignorar logs y otros archivos temporales
 *.log
+models/__pycache__/vehiculo.cpython-312.pyc
+models/__pycache__/ticket.cpython-312.pyc
+controllers/__pycache__/parking_controller.cpython-312.pyc
