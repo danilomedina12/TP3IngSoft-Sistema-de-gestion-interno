@@ -28,6 +28,7 @@
                     <th>Hora de Ingreso</th>
                     <th>Hora de Egreso</th>
                     <th>Ubicación de Cochera</th>
+                    <th>Tipo de Vehiculo</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +45,11 @@
                             {% endif %}
                         </td>
                         <td>{{ vehiculo.ubicacion_cochera }}</td>
+                        <td>{% if vehiculo.tipo_vehiculo %}
+                                {{ vehiculo.tipo_vehiculo }}
+                            {% else %}
+                                No registrado
+                            {% endif %}</td>
                     </tr>
                 {% else %}
                     <tr>
