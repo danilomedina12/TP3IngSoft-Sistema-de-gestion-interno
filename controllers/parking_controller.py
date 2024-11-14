@@ -7,7 +7,6 @@ from models.ticket import Ticket
 from models.precio_estadia import Precio
 from models.horario import Horario
 from datetime import datetime
-from app import app 
 
 def obtener_vehiculo_por_patente(patente):
     """
@@ -125,6 +124,7 @@ def registrarVehiculo():
                     vehiculo.hora_ingreso = hora_ingreso
                     vehiculo.hora_egreso = None
                     vehiculo.nombre_cliente = nombre
+                    vehiculo.tipo_vehiculo = tipo_vehiculo
                     vehiculo.ubicacion_cochera = ubicacion_cochera
                     db.session.commit()
                     flash("Vehículo re-ingresado y datos actualizados correctamente.")
@@ -138,6 +138,7 @@ def registrarVehiculo():
                     patente=patente, 
                     nombre_cliente=nombre, 
                     hora_ingreso=hora_ingreso, 
+                    tipo_vehiculo = tipo_vehiculo,
                     ubicacion_cochera=ubicacion_cochera
                 )
                 db.session.add(nuevo_vehiculo)
