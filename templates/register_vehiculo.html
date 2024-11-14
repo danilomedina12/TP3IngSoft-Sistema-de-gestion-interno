@@ -12,7 +12,7 @@
         <option value="">Seleccionar cochera</option>
         <!-- Lista de cocheras por piso -->
         {% for planta, cocheras in cocheras_disponibles.items() %}
-            <optgroup label="{{ piso }}">
+            <optgroup label="{{ planta }}">
                 {% for cochera in cocheras %}
                     <option value="{{ cochera }}">{{ cochera }}</option>
                 {% endfor %}
@@ -27,6 +27,15 @@
             </ul>
         {% endif %}
     {% endwith %}
+    </select><br>
+
+    <!-- Sección para seleccionar el tipo de vehículo -->
+    <label for="tipo_vehiculo">Tipo de Vehículo:</label>
+    <select id="tipo_vehiculo" name="tipo_vehiculo" required>
+        <option value="">Seleccionar tipo de vehículo</option>
+        {% for tipo in tipos_vehiculos %}
+            <option value="{{ tipo }}">{{ tipo }}</option>
+        {% endfor %}
     </select><br>
 
     <input type="submit" value="Registrar">

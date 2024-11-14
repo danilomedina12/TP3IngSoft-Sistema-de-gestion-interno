@@ -16,7 +16,6 @@ with app.app_context():
 def index():
     return render_template("index.html")
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return registrarVehiculo()
@@ -28,6 +27,14 @@ def registerEgreso():
 @app.route('/vehiculos', methods=['GET'])
 def vehiculos():
     return verVehiculos()
+
+@app.route('/editar_precio', methods=['GET','POST'])
+def editarPrecios():
+    return editar_precio()
+
+@app.route('/precios', methods=['GET'])
+def verPrecios():
+    return verPrecio()
 
 if __name__ == '__main__':
     app.run(debug=True)
