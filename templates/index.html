@@ -1,25 +1,48 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión de Estacionamiento</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Bienvenidos al sistema de gestión de estacionamiento</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li class="alert {{ category }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+    <div class="container mt-4">
+        <h1 class="text-center">Bienvenidos al Sistema de Gestión de Estacionamiento</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                    {% for category, message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
 
-    <p>Visitá <a href="/register">Registrar vehículo</a> para registrar un nuevo vehículo.</p>
-    <p>Visitá <a href="/vehiculos">Ver vehículos</a> para visualizar los vehículos ingresados</p>    
-    <p>Visitá <a href="/registerEgreso">Registrar egreso de vehículo</a> para egresar un nuevo vehículo.</p>
+        <div class="text-center mt-4">
+            <p>Utilice las siguientes opciones para gestionar el estacionamiento:</p>
 
+            <a href="/register" class="btn btn-primary btn-lg m-2">Registrar Vehículo</a>
+            <a href="/vehiculos" class="btn btn-info btn-lg m-2">Ver Vehículos</a>
+            <a href="/registerEgreso" class="btn btn-danger btn-lg m-2">Registrar Egreso de Vehículo</a>
+        </div>
+
+        <!-- Sección de administración de precios -->
+        <div class="text-center mt-4">
+            <p>Opciones de administración:</p>
+
+            <a href="/editar_precio" class="btn btn-warning btn-lg m-2">Editar Precios</a>
+            <a href="/precios" class="btn btn-success btn-lg m-2">Ver Precios</a>
+        </div>
+
+        <footer class="text-center mt-5">
+            <p>&copy; 2024 Sistema de Gestión de Estacionamiento | Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

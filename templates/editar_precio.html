@@ -1,26 +1,43 @@
+<!-- templates/editar_precio.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Precio</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Editar Precio de Hora de Estadia por Vehículo</h1>
-    
-    <form method="POST">
-        <label for="tipo_vehiculo">Tipo de Vehículo:</label>
-        <select name="tipo_vehiculo" id="tipo_vehiculo" required>
-            {% for tipo in tipos_vehiculos %}
-                <option value="{{ tipo }}">{{ tipo }}</option>
-            {% endfor %}
-        </select><br><br>
+    <div class="container mt-4">
+        <h1 class="text-center">Editar Precio de Hora de Estadia por Vehículo</h1>
 
-        <label for="nuevo_precio">Nuevo Precio:</label>
-        <input type="text" name="nuevo_precio" id="nuevo_precio" required><br><br>
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="tipo_vehiculo">Tipo de Vehículo:</label>
+                <select name="tipo_vehiculo" id="tipo_vehiculo" class="form-control" required>
+                    {% for tipo in tipos_vehiculos %}
+                        <option value="{{ tipo }}">{{ tipo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <button type="submit">Actualizar Precio</button>
-    </form>
+            <div class="form-group">
+                <label for="nuevo_precio">Nuevo Precio:</label>
+                <input type="text" name="nuevo_precio" id="nuevo_precio" class="form-control" required>
+            </div>
 
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-warning btn-lg">Actualizar Precio</button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al Inicio</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

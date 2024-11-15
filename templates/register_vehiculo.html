@@ -1,42 +1,68 @@
-<form method="post" action="/register">
-    <!-- Campos de patente y nombre del cliente -->
-    <label for="patente">Patente:</label>
-    <input type="text" id="patente" name="patente" required><br>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+    <!-- Agregar enlace a Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Registrar Vehículo</h1>
+        <form method="post" action="/register">
+            <!-- Campos de patente y nombre del cliente -->
+            <label for="patente">Patente:</label>
+            <input type="text" id="patente" name="patente" required class="form-control"><br>
 
-    <label for="nombre_del_cliente">Nombre del Cliente:</label>
-    <input type="text" id="nombre_del_cliente" name="nombre_del_cliente" required><br>
+            <label for="nombre_del_cliente">Nombre del Cliente:</label>
+            <input type="text" id="nombre_del_cliente" name="nombre_del_cliente" required class="form-control"><br>
 
-    <!-- Nueva sección para asignar cochera -->
-    <label for="ubicacion_cochera">Ubicación de Cochera:</label>
-    <select id="ubicacion_cochera" name="ubicacion_cochera" required>
-        <option value="">Seleccionar cochera</option>
-        <!-- Lista de cocheras por piso -->
-        {% for planta, cocheras in cocheras_disponibles.items() %}
-            <optgroup label="{{ planta }}">
-                {% for cochera in cocheras %}
-                    <option value="{{ cochera }}">{{ cochera }}</option>
+            <!-- Nueva sección para asignar cochera -->
+            <label for="ubicacion_cochera">Ubicación de Cochera:</label>
+            <select id="ubicacion_cochera" name="ubicacion_cochera" required class="form-control">
+                <option value="">Seleccionar cochera</option>
+                <!-- Lista de cocheras por piso -->
+                {% for planta, cocheras in cocheras_disponibles.items() %}
+                    <optgroup label="{{ planta }}">
+                        {% for cochera in cocheras %}
+                            <option value="{{ cochera }}">{{ cochera }}</option>
+                        {% endfor %}
+                    </optgroup>
                 {% endfor %}
-            </optgroup>
-        {% endfor %}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li class="alert {{ category }}">{{ message }}</li>
+            </select><br>
+
+            <!-- Sección para seleccionar el tipo de vehículo -->
+            <label for="tipo_vehiculo">Tipo de Vehículo:</label>
+            <select id="tipo_vehiculo" name="tipo_vehiculo" required class="form-control">
+                <option value="">Seleccionar tipo de vehículo</option>
+                {% for tipo in tipos_vehiculos %}
+                    <option value="{{ tipo }}">{{ tipo }}</option>
                 {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    </select><br>
+            </select><br>
 
-    <!-- Sección para seleccionar el tipo de vehículo -->
-    <label for="tipo_vehiculo">Tipo de Vehículo:</label>
-    <select id="tipo_vehiculo" name="tipo_vehiculo" required>
-        <option value="">Seleccionar tipo de vehículo</option>
-        {% for tipo in tipos_vehiculos %}
-            <option value="{{ tipo }}">{{ tipo }}</option>
-        {% endfor %}
-    </select><br>
+            <!-- Ver el mensaje de flask en esta interfaz-->
+            <input type="submit" value="Registrar" class="btn btn-primary">
 
-    <input type="submit" value="Registrar">
-</form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-warning" role="alert">
+                    {% for category, message in messages %}
+                        <strong>{{ message }}</strong>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+            <br><br><br>
+
+            <!-- Botón de volver al inicio -->
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al Inicio</a>
+        </form>
+    </div>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

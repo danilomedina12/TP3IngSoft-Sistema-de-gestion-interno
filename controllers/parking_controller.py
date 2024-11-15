@@ -7,6 +7,7 @@ from models.ticket import Ticket
 from models.precio_estadia import Precio
 from models.horario import Horario
 from datetime import datetime
+from utils.validations import validar_patente
 
 def obtener_vehiculo_por_patente(patente):
     """
@@ -50,7 +51,9 @@ def registrarEgreso():
 
         # Llama a la función para obtener el vehículo por patente
         vehiculo = obtener_vehiculo_por_patente(patente)
-
+        if vehiculo is None:
+            flash('El vehículo no se encuentra en estacionamiento', 'error')
+            return redirect(url_for('registerEgreso'))
         if vehiculo.hora_egreso is None:
             # Cambia el valor del atributo `hora_egreso` por la variable `hora_egreso`
             vehiculo.hora_egreso = hora_egreso
@@ -103,6 +106,11 @@ def registrarVehiculo():
         hora_ingreso = datetime.now()
         ubicacion_cochera = request.form['ubicacion_cochera']
         tipo_vehiculo = request.form['tipo_vehiculo']
+
+        if not validar_patente(patente):
+            flash("La patente no tiene un formato valido.", "error")
+            return redirect(url_for('register'))
+
 
         if not patente or not nombre:
             flash("Patente y nombre del cliente son obligatorios.", "error")
