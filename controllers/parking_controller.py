@@ -8,6 +8,7 @@ from models.precio_estadia import Precio
 from models.horario import Horario
 from datetime import datetime
 from utils.validations import validar_patente
+from models.promocion import Promocion
 
 def obtener_vehiculo_por_patente(patente):
     """
@@ -26,17 +27,30 @@ def tiempo_total_estadia_minutos(hora_ingreso, hora_egreso):
     duracion = (hora_egreso - hora_ingreso).total_seconds() / 60
     return duracion
 
+# Función para calcular el costo con el descuento
 def calcular_costo_estacionamiento(hora_ingreso, hora_egreso, vehiculo):
-    # Obtener el precio
+    # Obtenemos el precio base por hora del vehículo
     precio = Precio.query.filter(Precio.tipo_vehiculo == vehiculo.tipo_vehiculo).first()
     
-    # Calcula la duración en horas
+    # Calculamos la duración total en horas
     duracion = tiempo_total_estadia(hora_ingreso, hora_egreso)
     
-    # Calcular el valor del servicio
+    # Calculamos el costo sin descuento
     costo = duracion * precio.precio
     
-    return round(costo, 2)
+    # Obtenemos las promociones aplicables
+    promociones = Promocion.query.filter(Promocion.cantidad_horas <= duracion).all()
+    
+    # Si hay promociones disponibles, seleccionamos la mejor
+    if promociones:
+        mejor_promocion = max(promociones, key=lambda p: p.porcentaje_descuento)
+        # Aplicamos el descuento
+        costo_con_descuento = costo * (1 - mejor_promocion.porcentaje_descuento / 100)
+    else:
+        # Si no hay promociones, el costo no tiene descuento
+        costo_con_descuento = costo
+    
+    return round(costo_con_descuento, 2)
 
 # @app.route('/registerEgreso', methods=['GET', 'POST'])
 def registrarEgreso():

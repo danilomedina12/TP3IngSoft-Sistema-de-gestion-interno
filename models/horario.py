@@ -1,8 +1,8 @@
 from datetime import datetime, time
 
 class Horario:
-    hora_apertura = time(8, 30)  # 8:30 am
-    hora_cierre = time(17,58)
+    hora_apertura = time(8, 0)  # 8:30 am
+    hora_cierre = time(20,0)
  
     @staticmethod
     def hora_de_apertura(self):

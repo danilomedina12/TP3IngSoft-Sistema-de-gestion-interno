@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promociones</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center">Promociones Disponibles</h1>
+
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Cantidad de Horas</th>
+                    <th scope="col">Porcentaje de Descuento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for promocion in promociones %}
+                <tr>
+                    <td>{{ promocion.cantidad_horas }}</td>
+                    <td>{{ promocion.porcentaje_descuento }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('promocion.nueva_promocion') }}" class="btn btn-primary">Nueva Promoción</a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver al Menú Principal</a>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="alert alert-warning" role="alert">
+                {% for category, message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    </div>
+</body>
+</html>

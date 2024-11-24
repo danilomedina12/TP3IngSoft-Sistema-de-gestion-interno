@@ -21,7 +21,7 @@
         {% endwith %}
 
         <div class="text-center mt-4">
-            <p>Utilice las siguientes opciones para gestionar el estacionamiento:</p>
+            <p>Utilizá las siguientes opciones para gestionar el estacionamiento:</p>
 
             <a href="/register" class="btn btn-primary btn-lg m-2">Registrar Vehículo</a>
             <a href="/vehiculos" class="btn btn-info btn-lg m-2">Ver Vehículos</a>
@@ -34,6 +34,13 @@
 
             <a href="/editar_precio" class="btn btn-warning btn-lg m-2">Editar Precios</a>
             <a href="/precios" class="btn btn-success btn-lg m-2">Ver Precios</a>
+        </div>
+
+        <!-- Nueva sección: Administración de promociones -->
+        <div class="text-center mt-4">
+            <p>Opciones de promociones:</p>
+            
+            <a href="{{ url_for('promocion.listar_promociones') }}" class="btn btn-secondary btn-lg m-2">Gestionar Promociones</a>
         </div>
 
         <footer class="text-center mt-5">
