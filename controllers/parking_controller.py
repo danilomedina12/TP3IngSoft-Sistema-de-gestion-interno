@@ -9,6 +9,8 @@ from models.horario import Horario
 from datetime import datetime
 from utils.validations import validar_patente
 from models.promocion import Promocion
+from sqlalchemy.sql import func
+from sqlalchemy.sql import text
 
 def obtener_vehiculo_por_patente(patente):
     """
@@ -234,3 +236,61 @@ def editar_precio():
         return redirect(url_for('verPrecios'))
 
     return render_template('editar_precio.html', tipos_vehiculos=tipos_vehiculos)
+
+from datetime import datetime, timedelta
+from flask import request, render_template
+from sqlalchemy import func
+
+#@app.route('/reporte_diario', methods=['GET'])
+def reporte_diario():
+    # Obtener la fecha desde el parámetro de la URL o usar la fecha actual
+    fecha_param = request.args.get('fecha')
+    try:
+        fecha_hoy = datetime.strptime(fecha_param, '%Y-%m-%d').date() if fecha_param else datetime.now().date()
+    except ValueError:
+        return "Formato de fecha inválido. Use 'YYYY-MM-DD'.", 400
+
+    # Vehículos que ingresaron en la fecha especificada
+    vehiculos_ingresados = Ticket.query.filter(func.date(Ticket.hora_entrada) == fecha_hoy).count()
+
+    # Vehículos que salieron en la fecha especificada
+    vehiculos_salidos = Ticket.query.filter(
+        func.date(Ticket.hora_emision) == fecha_hoy,
+        Ticket.hora_emision.isnot(None)
+    ).count()
+
+    # Calcular ingresos totales del día
+    ingresos_totales = db.session.query(func.sum(Ticket.monto_total)).filter(
+        func.date(Ticket.hora_emision) == fecha_hoy,
+        Ticket.hora_emision.isnot(None)
+    ).scalar() or 0.0
+
+    # Calcular tiempo promedio de estacionamiento con mayor precisión
+    result = db.session.execute(
+        text("""
+            SELECT AVG(TIMESTAMPDIFF(SECOND, hora_entrada, hora_emision)) / 60 AS tiempo_promedio
+            FROM tickets
+            WHERE DATE(hora_emision) = :fecha_hoy AND hora_emision IS NOT NULL
+        """), {"fecha_hoy": fecha_hoy}
+    ).scalar()
+
+    # Convertir el resultado a float, o usar 0.0 si es None
+    tiempos_estacionamiento = float(result) if result is not None else 0.0
+
+    # Convertir a timedelta
+    tiempo_promedio = timedelta(minutes=tiempos_estacionamiento)
+
+    # Obtener detalles de vehículos (tabla)
+    detalle_vehiculos = Ticket.query.filter(
+        func.date(Ticket.hora_emision) == fecha_hoy,
+        Ticket.hora_emision.isnot(None)
+    ).all()
+
+    # Renderizar el reporte diario
+    return render_template('reporte_diario.html', 
+                           fecha_hoy=fecha_hoy, 
+                           vehiculos_ingresados=vehiculos_ingresados, 
+                           vehiculos_salidos=vehiculos_salidos,
+                           ingresos_totales=ingresos_totales, 
+                           tiempo_promedio=tiempo_promedio, 
+                           detalle_vehiculos=detalle_vehiculos)

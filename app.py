@@ -41,5 +41,9 @@ def editarPrecios():
 def verPrecios():
     return verPrecio()
 
+@app.route('/reporte_diario', methods=['GET'])
+def reporte():
+    return reporte_diario()
+
 if __name__ == '__main__':
     app.run(debug=True)

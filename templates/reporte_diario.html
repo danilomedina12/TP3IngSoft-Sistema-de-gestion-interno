@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Diario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reporte Diario</h1>
+    <p><strong>Fecha:</strong> {{ fecha_hoy }}</p>
+
+    <div class="summary">
+        <p><strong>Vehículos ingresados:</strong> {{ vehiculos_ingresados }}</p>
+        <p><strong>Vehículos salidos:</strong> {{ vehiculos_salidos }}</p>
+        <p><strong>Ingresos totales:</strong> ${{ ingresos_totales }}</p>
+        <p><strong>Tiempo promedio de estacionamiento:</strong> {{ (tiempo_promedio.total_seconds() / 60) | round(2) }} minutos</p>
+    </div>
+
+    <h2>Detalle de Vehículos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Hora de Entrada</th>
+                <th>Hora de Salida</th>
+                <th>Monto ($)</th>
+                <th>Duración (minutos)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in detalle_vehiculos %}
+            <tr>
+                <td>{{ ticket.id }}</td>
+                <td>{{ ticket.hora_entrada }}</td>
+                <td>{{ ticket.hora_emision }}</td>
+                <td>{{ ticket.monto_total }}</td>
+                <td>
+                    {% if ticket.hora_emision %}
+                        {{ ((ticket.hora_emision - ticket.hora_entrada).total_seconds() / 60) | round(2) }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
